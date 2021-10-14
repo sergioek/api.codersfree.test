@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CategoryResource;
 use App\Models\Category;
 use Illuminate\Http\Request;
 
@@ -15,9 +16,12 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories=Category::all();
-        //retorna la consulta
-        return $categories;
+        $categories=Category::included()->filter()->sort()->get();
+        //retorna la consulta con algunos campos
+
+       //return CategoryResource::make($categories);
+        return  CategoryResource::collection($categories);
+
     }
 
     /**
@@ -46,7 +50,7 @@ class CategoryController extends Controller
      */
     public function show($id)
     {
-        $category=Category::findOrFail($id);
+        $category=Category::included()->findOrFail($id);
         return $category;
     }
 
